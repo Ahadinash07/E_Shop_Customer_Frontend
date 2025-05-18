@@ -25,8 +25,8 @@ const CategorySection = () => {
     const fetchData = async () => {
       try {
         const [catResponse, subCatResponse] = await Promise.all([
-          axios.get('http://localhost:5376/api/getCategories'),
-          axios.get('http://localhost:5376/api/subCategory'),
+          axios.get('https://e-shop-backend-sage.vercel.app/api/getCategories'),
+          axios.get('https://e-shop-backend-sage.vercel.app/api/subCategory'),
         ]);
 
         setCategories(catResponse.data[0] || catResponse.data);

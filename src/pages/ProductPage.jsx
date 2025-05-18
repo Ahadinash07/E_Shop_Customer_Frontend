@@ -23,12 +23,12 @@ const ProductPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const productResponse = await axios.get(`http://localhost:5376/api/products/details/${productId}`);
+        const productResponse = await axios.get(`https://e-shop-backend-sage.vercel.app/api/products/details/${productId}`);
         if (!productResponse.data.product) {
           throw new Error('Product not found');
         }
         setProduct(productResponse.data.product);
-        const relatedResponse = await axios.get(`http://localhost:5376/api/products/search?category=${productResponse.data.product.category}&limit=4`);
+        const relatedResponse = await axios.get(`https://e-shop-backend-sage.vercel.app/api/products/search?category=${productResponse.data.product.category}&limit=4`);
         setRelatedProducts(relatedResponse.data.products || []);
       } catch (err) {
         console.error('Fetch Error:', err);
@@ -459,7 +459,7 @@ export default ProductPage;
 //         setLoading(true);
         
 //         // Fetch product details
-//         const productResponse = await axios.get(`http://localhost:5376/api/products/details/${productId}`);
+//         const productResponse = await axios.get(`https://e-shop-backend-sage.vercel.app/api/products/details/${productId}`);
 //         if (!productResponse.data.product) {
 //           throw new Error('Product not found');
 //         }

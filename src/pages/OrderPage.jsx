@@ -17,6 +17,8 @@ const OrderPage = () => {
   const [message, setMessage] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
+  
+
   useEffect(() => {
     if (!user) {
       navigate('/login');

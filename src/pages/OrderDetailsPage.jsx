@@ -19,6 +19,7 @@ import EmptyState from '../components/EmptyState';
 const ProductImage = ({ product = {}, className = '' }) => {
   const [imageError, setImageError] = useState(false);
   const imageUrl = product.images?.[0] || null;
+  // const navigate = useNavigate();
 
   return (
     <div className={`bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center ${className}`}>
@@ -26,12 +27,15 @@ const ProductImage = ({ product = {}, className = '' }) => {
         <motion.img
           src={imageUrl}
           alt={product.productName || 'Product image'}
-          className="w-full h-full object-cover"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          className="w-full h-full object-cover cursor-pointer"
+          // initial={{ opacity: 0 }}
+          // animate={{ opacity: 1 }}
+          // transition={{ duration: 0.3 }}
           onError={() => setImageError(true)}
+          navi
           loading="lazy"
+          // onClick={() => navigate(`/product/${product.productId}`)}
+          
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-gray-100">

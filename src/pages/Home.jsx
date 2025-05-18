@@ -15,7 +15,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5376/api/products/featured');
+        const response = await axios.get('https://e-shop-backend-sage.vercel.app/api/products/featured');
         setFeaturedProducts(response.data.products);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch featured products');
@@ -194,7 +194,7 @@ export default Home;
 //   useEffect(() => {
 //     const fetchFeaturedProducts = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:5376/api/products/featured');
+//         const response = await axios.get('https://e-shop-backend-sage.vercel.app/api/products/featured');
 //         setFeaturedProducts(response.data.products);
 //       } catch (err) {
 //         setError(err.response?.data?.message || 'Failed to fetch featured products');

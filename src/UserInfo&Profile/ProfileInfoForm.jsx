@@ -128,7 +128,7 @@ const ProfileInfoForm = ({ user }) => {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.put(
-          'http://localhost:5376/api/auth/profile',
+          'https://e-shop-backend-sage.vercel.app/api/auth/profile',
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -522,7 +522,7 @@ export default ProfileInfoForm;
 //       try {
 //         const token = localStorage.getItem('token');
 //         const response = await axios.put(
-//           'http://localhost:5376/api/auth/profile',
+//           'https://e-shop-backend-sage.vercel.app/api/auth/profile',
 //           formData,
 //           {
 //             headers: { Authorization: `Bearer ${token}` },

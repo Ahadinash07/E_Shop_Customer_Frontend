@@ -13,6 +13,7 @@ import { IoStatsChart } from 'react-icons/io5';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 
+
 const OrdersPage = () => {
   const { user, getOrders } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -456,7 +457,7 @@ const OrdersPage = () => {
                             <div className="mt-6 flex flex-wrap gap-3">
                               <Link
                                 to={`/orders/${order.order_id}`}
-                                className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors"
+                                className="inline-flex items-center justify-center px-4 py-2 border bg-indigo-600 text-white shadow-md border-gray-300 rounded-lg font-medium transition-colors"
                               >
                                 View Order Details
                               </Link>

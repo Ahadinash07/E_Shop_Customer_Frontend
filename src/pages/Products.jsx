@@ -27,12 +27,12 @@ const Products = () => {
         let params = {};
 
         if (filters.subcategory) {
-          url = `http://localhost:5376/api/products/subcategory/${filters.subcategory}`;
+          url = `https://e-shop-backend-sage.vercel.app/api/products/subcategory/${filters.subcategory}`;
         } else {
-          url = 'http://localhost:5376/api/products/search';
+          url = 'https://e-shop-backend-sage.vercel.app/api/products/search';
           params = {
             category: filters.category
-              ? (await axios.get('http://localhost:5376/api/getCategoriesByCatId/' + filters.category)).data[0][0].catName
+              ? (await axios.get('https://e-shop-backend-sage.vercel.app/api/getCategoriesByCatId/' + filters.category)).data[0][0].catName
               : '',
             brand: filters.brand,
             minPrice: filters.minPrice,
