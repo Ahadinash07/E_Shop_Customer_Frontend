@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FiMapPin, FiEdit, FiTrash2, FiChevronRight } from 'react-icons/fi';
+import { FiMapPin, FiEdit, FiTrash2, FiPackage } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import AddressModal from '../Modal/AddressModal';
+
+const RAZORPAY_TEST_KEY = 'rzp_test_jJEsSzUJQWCaBh'; // Replace with your test key
 
 const OrderPage = () => {
   const { user, cartItems, addresses, createOrder, verifyPayment } = useContext(AuthContext);
@@ -16,8 +18,30 @@ const OrderPage = () => {
   const [editingAddress, setEditingAddress] = useState(null);
   const [message, setMessage] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const razorpayLoaded = useRef(false);
 
-  
+  // Load Razorpay script on component mount
+  useEffect(() => {
+    if (razorpayLoaded.current || window.Razorpay) {
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => {
+      razorpayLoaded.current = true;
+      console.log('Razorpay script loaded successfully');
+    };
+    script.onerror = () => {
+      console.error('Failed to load Razorpay script');
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -28,7 +52,6 @@ const OrderPage = () => {
       setError('Your cart is empty');
       navigate('/cart');
     } else {
-      // Set default address if available
       const defaultAddress = addresses.find((addr) => addr.is_default);
       setSelectedAddress(defaultAddress || addresses[0] || null);
     }
@@ -102,17 +125,37 @@ const OrderPage = () => {
         setTimeout(() => navigate('/orders'), 2000);
         return;
       }
-  
+
+      // Check if Razorpay is loaded
+      if (!window.Razorpay) {
+        // Attempt to load if not available
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        
+        await new Promise((resolve, reject) => {
+          script.onload = () => {
+            razorpayLoaded.current = true;
+            resolve();
+          };
+          script.onerror = () => {
+            reject(new Error('Failed to load Razorpay script'));
+          };
+          document.body.appendChild(script);
+        });
+      }
+
       // Razorpay payment handling
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        key: RAZORPAY_TEST_KEY,
         amount: result.order.amount * 100,
-        currency: result.order.currency,
+        currency: 'INR',
         name: 'E-Shop',
-        description: 'Order Payment',
+        description: `Order #${result.order.order_id}`,
         order_id: result.order.razorpay_order_id,
         handler: async (response) => {
           try {
+            console.log('Payment success response:', response);
             const verifyResult = await verifyPayment({
               order_id: result.order.order_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -129,7 +172,7 @@ const OrderPage = () => {
             } else {
               setMessage({ 
                 type: 'error', 
-                text: verifyResult.message 
+                text: verifyResult.message || 'Payment verification failed'
               });
             }
           } catch (err) {
@@ -141,22 +184,39 @@ const OrderPage = () => {
           }
         },
         prefill: {
-          name: user.first_name,
-          email: user.email,
-          contact: user.phone,
+          name: user.first_name || 'Customer',
+          email: user.email || 'customer@example.com',
+          contact: user.phone || '9999999999',
         },
         theme: {
           color: '#4F46E5',
         },
+        modal: {
+          ondismiss: () => {
+            setMessage({
+              type: 'info',
+              text: 'Payment window closed'
+            });
+          }
+        }
       };
   
       const rzp = new window.Razorpay(options);
+      
+      rzp.on('payment.failed', (response) => {
+        console.error('Payment failed:', response.error);
+        setMessage({
+          type: 'error',
+          text: `Payment failed: ${response.error.description}`
+        });
+      });
+      
       rzp.open();
     } catch (err) {
       console.error('Order placement error:', err);
       setMessage({ 
         type: 'error', 
-        text: err.response?.data?.message || 'Failed to place order. Please try again.',
+        text: err.message || 'Failed to place order. Please try again.',
       });
     } finally {
       setIsPlacingOrder(false);
@@ -190,7 +250,8 @@ const OrderPage = () => {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Complete Your Order</h1>
 
         {message && (
-          <div className={`mb-4 p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+          <div className={`mb-4 p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-700' : 
+                         message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
             {message.text}
           </div>
         )}
@@ -385,14 +446,13 @@ const OrderPage = () => {
             </p>
           </div>
         </div>
-      </div>
 
-      <AddressModal
+      </div>
+ <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         onSave={() => {
           setIsAddressModalOpen(false);
-          // Addresses will be refreshed via context update
         }}
         initialAddress={editingAddress}
       />
