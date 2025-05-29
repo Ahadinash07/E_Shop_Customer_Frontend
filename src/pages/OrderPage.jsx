@@ -448,7 +448,7 @@ const OrderPage = () => {
         </div>
 
       </div>
- <AddressModal
+      <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         onSave={() => {

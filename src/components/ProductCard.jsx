@@ -39,7 +39,7 @@ const ProductCard = ({ product = {} }) => {
       <Link to={`/product/${safeProduct.productId}`} className="flex flex-col h-full">
         {/* Image Container with Fixed Height */}
         <div 
-          className="relative bg-gray-100 overflow-hidden flex items-center justify-center"
+          className="relative bg-white overflow-hidden flex items-center justify-center"
           style={{ 
             height: imageHeight,
             minHeight: imageHeight
@@ -58,7 +58,7 @@ const ProductCard = ({ product = {} }) => {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+            <div className="w-full h-full flex items-center justify-center bg-white">
               <span className="text-gray-500 text-sm">No image available</span>
             </div>
           )}
@@ -66,7 +66,7 @@ const ProductCard = ({ product = {} }) => {
           {/* Quick Actions */}
           {isHovered && (
             <motion.div 
-              className="absolute bottom-0 left-0 right-0 bg-white/90 p-2 flex justify-center space-x-2"
+              className="absolute bottom-0 left-0 right-0 bg-white p-2 flex justify-center space-x-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
@@ -98,7 +98,7 @@ const ProductCard = ({ product = {} }) => {
             {[1, 2, 3, 4, 5].map((star) => (
               <svg
                 key={star}
-                className={`w-4 h-4 ${star <= 4 ? 'text-yellow-400' : 'text-gray-300'}`}
+                className={`w-4 h-4 ${star <= 4.5 ? 'text-yellow-400' : 'text-gray-300'}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
