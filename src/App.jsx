@@ -76,6 +76,7 @@ function App() {
       </main>
       {showHeaderFooter && <Footer />}
       <Toaster position="top-right" reverseOrder={false} />
+      <Chatbot />
     </div>
   );
 }
