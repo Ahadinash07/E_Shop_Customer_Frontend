@@ -17,7 +17,6 @@ import { Toaster } from 'react-hot-toast';
 import OrderPage from './pages/OrderPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
-import Chatbot from './components/Chatbot';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -77,7 +76,6 @@ function App() {
       </main>
       {showHeaderFooter && <Footer />}
       <Toaster position="top-right" reverseOrder={false} />
-      <Chatbot />
     </div>
   );
 }
